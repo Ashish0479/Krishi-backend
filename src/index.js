@@ -20,7 +20,7 @@ app.use(express.text())
 
 const allowedOrigins = [
   "https://Krishi-Sakhi.vercel.app",
-  "https://Krishi-Sakhi-crl0.onrender.com",
+  "https://krishi-sakhi-bb2b.onrender.com",
   "http://localhost:5173"
 ];
 
