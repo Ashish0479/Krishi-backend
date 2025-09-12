@@ -1,0 +1,74 @@
+{
+  "region": "Kerala, India",
+  "note": "Month ranges are typical windows; adjust by district, variety, irrigation and IMD/KAU advisories.",
+  "sources": [
+    "IMD Crop Weather Calendar — Kerala (IMD Pune).",
+    "Kerala Agricultural University (KAU) crop calendars & package of practices.",
+    "KSACC — Kerala state crop planners & monthly crop calendars.",
+    "Kerala Agriculture Dept. statistics & district advisories."
+  ],
+  "crops": {
+    "paddy": {
+      "seasons": {
+        "virippu": {
+          "sowing_window": "April - May",
+          "transplanting_window": "May - June",
+          "harvest_window": "September - October",
+          "notes": "Main monsoon crop in many districts; timing depends on monsoon onset and water availability."
+        },
+        "mundakan": {
+          "sowing_window": "August - September",
+          "transplanting_window": "September - October",
+          "harvest_window": "December - February",
+          "notes": "Often the largest cropped area and highest production; planted after initial monsoon rains."
+        },
+        "puncha": {
+          "sowing_window": "December - January",
+          "transplanting_window": "December - January",
+          "harvest_window": "March - April",
+          "notes": "Requires irrigation/water availability; occurs in limited water-rich zones."
+        }
+      },
+      "variety_notes": "Short-duration HYVs are used in many areas; central Kerala has dedicated short-duration rice calendars."
+    },
+    "coconut": {
+      "planting_window": "Year-round (best planting often just before monsoon)",
+      "management": "Monthly operations (pest control, manuring, basin formation) per KSACC/KAU calendars",
+      "harvest_pattern": "Year-round (periodic nut flushing); management tied to rainfall patterns"
+    },
+    "banana": {
+      "planting_window": "Year-round (peak planting pre-monsoon and just after monsoon)",
+      "harvest_window": "Variety dependent; ~9-12 months after planting for many cultivars",
+      "notes": "Bunch management, sucker selection, bunch covering timed seasonally."
+    },
+    "tapioca": {
+      "planting_window": "Pre-monsoon / early monsoon (May - July) in many areas",
+      "harvest_window": "8 - 12 months after planting (depending on variety and purpose)",
+      "notes": "Used as food crop and industrial; planting timed to avoid waterlogging."
+    },
+    "pepper": {
+      "planting_window": "Rooted cuttings & new vines generally planted pre-monsoon",
+      "management_window": "Year-round climber care; critical operations around monsoon (mulching, drainage)",
+      "notes": "Perennial spice; yields and pest incidence tied closely to rainfall & shade conditions."
+    },
+    "coffee": {
+      "planting_window": "Main planting pre-monsoon (variety & elevation dependent)",
+      "harvest_window": "Usually seasonal harvest once or twice a year depending on variety (Arabica/Robusta)",
+      "notes": "Kerala coffee pockets: highland/munnar/hilly tracts; management follows KAU advisories."
+    },
+    "cashew": {
+      "planting_window": "Month-specific operations; KSACC provides a monthly planner",
+      "flowering_harvest": "Flowering & harvest depend on local clones; operations like grafting/pruning are seasonal",
+      "notes": "Refer to KSACC cashew calendar for month-by-month tasks."
+    },
+    "pulses": {
+      "sowing_windows": "Kharif/rainfed pulses sown with monsoon; short-duration pulses in post-monsoon windows",
+      "harvest_windows": "Variety dependent (30-120 days)",
+      "notes": "Use local short-duration varieties for intercropping in coconut/arecanut gardens."
+    },
+    "vegetables": {
+      "general": "Vegetables have staggered planting across the year; certain crops (okra, brinjal, tomato, leafy greens) are grown in multiple crops per year with peak windows before/after monsoon per district advisories",
+      "notes": "Follow district-specific vegetable calendars from KAU and state horticulture."
+    }
+  }
+}
