@@ -1,6 +1,6 @@
 const express = require('express');
 const {createUser,getUserProfileController}=require('../controller/userController')
-const { isLoggedIn } = require("../validations/authValidator");
+const { isLoggedIn } = require("../validations/authvalidator");
 
 
 const userRouter = express.Router();  

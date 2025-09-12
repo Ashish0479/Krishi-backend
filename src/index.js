@@ -16,10 +16,26 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.text())
 
-app.use(cors({
-    origin: 'http://localhost:5173',// allow to server to accept request from different origin
-    credentials: true, // allow session cookie from browser to pass through
-}));
+
+
+const allowedOrigins = [
+  "https://Krishi-Sakhi.vercel.app",
+  "https://Krishi-Sakhi-crl0.onrender.com",
+  "http://localhost:5173"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 app.use('/users',userRouter)
 app.use('/auth',authRouter)
