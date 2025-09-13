@@ -1,42 +1,51 @@
-const axios = require("axios");
-const bakch = require('./test.json')
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const fs = require("fs");
+const bakch = require("./test.json");
 
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-async function generateAIResponse(farmerMessage) {
-  if (!farmerMessage || farmerMessage.trim() === "") {
-    throw { reason: "Message cannot be empty", statusCode: 400 };
+async function generateAIResponse(farmerMessage, imagePath = null) {
+  if ((!farmerMessage || farmerMessage.trim() === "") && !imagePath) {
+    throw { reason: "Message or image is required", statusCode: 400 };
   }
 
   try {
-    const response = await axios.post(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        model: "llama-3.3-70b-versatile",
-        messages: [
-          {
-            role: "system",
-            content:
-              `You are Krishi Sakhi, a helpful digital farming assistant for Kerala farmers. Reply in Malayalam unless farmer uses another language.always keep in mind the crop data given as follows: ${bakch} `,
-          },
-          {
-            role: "user",
-            content: farmerMessage,
-          },
-        ],
-        temperature: 0.7,
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    return response.data.choices[0].message.content;
+    let inputParts = [
+      {
+        text: `You are a helpful agricultural assistant. Respond to the following message from a farmer:\n\n${farmerMessage}
+        Your goal is to provide clear, practical, and localized agricultural guidance that helps 
+farmers make better decisions in real time.
+
+### Language Instructions
+- Detect the language of the farmer's message.
+- If farmer writes in **Malayalam**, reply fully in **Malayalam**.  
+- If farmer writes in **English**, reply in **English**.  
+- If farmer mixes, reply in the **same style (Malayalam + English)**.  
+
+`,
+      },
+    ];
+
+ 
+    if (imagePath) {
+      const imageBase64 = fs.readFileSync(imagePath).toString("base64");
+      inputParts.push({
+        inlineData: {
+          mimeType: "image/jpeg", 
+          data: imageBase64,
+        },
+      });
+    }
+
+
+    const result = await model.generateContent(inputParts);
+
+    return result.response.text();
   } catch (error) {
-    console.error("GROQ API Error:", error.response?.data || error.message);
-    throw { reason: "Failed to get response from GROQ API", statusCode: 500 };
+    console.error("Gemini API Error:", error.message);
+    throw { reason: "Failed to get response from Gemini API", statusCode: 500 };
   }
 }
 

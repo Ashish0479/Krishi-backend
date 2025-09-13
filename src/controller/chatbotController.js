@@ -1,10 +1,17 @@
 const { generateAIResponse } = require("../services/chatbotService");
+const fs = require("fs");
 
 async function chatWithKrishiSakhi(req, res) {
   try {
     const { message, userId } = req.body;
+    let imagePath = null;
 
-    const reply = await generateAIResponse(message);
+    // Agar file upload ho (Multer use karke req.file me aayegi)
+    if (req.file) {
+      imagePath = req.file.path; // upload hone ke baad file ka path
+    }
+
+    const reply = await generateAIResponse(message, imagePath);
 
     res.status(200).json({
       success: true,
