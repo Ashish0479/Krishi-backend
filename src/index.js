@@ -5,6 +5,7 @@ const userRouter = require('./routes/userRouter')
 const authRouter = require('./routes/authRouter')
 const weatherRouter = require('./routes/weatherRouter')
 const chatRouter = require('./routes/chatbotRouter')
+const cropRouter = require('./routes/cropHealthRouter')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const PORT = serverConfig.PORT || 5000  
@@ -40,7 +41,8 @@ app.use(
 app.use('/users',userRouter)
 app.use('/auth',authRouter)
 app.use('/weather',weatherRouter)
-app.use('/chat',chatRouter)
+app.use('/chat',chatRouter);
+app.use('/crop',cropRouter);
 
 app.get('/hii',(req,res)=>{
     return res.json({message:'hello'})
