@@ -5,7 +5,7 @@ const fetchWeatherByCity = async (req, res) => {
   try {
     const data = await getWeatherByCity(city);
 
-    if (data.cod !== 200) {
+    if (!data || data.cod !== 200) {
       return res.status(data.cod).json({ error: data.message });
     }
 

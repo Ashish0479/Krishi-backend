@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
   gender: { type: String },
   dateOfBirth: { type: Date },
 
-  state: { type: String },
+  state: { type: String ,default:"kerala"},
   district: { type: String },
   village: { type: String },
   pincode: { type: String },
@@ -21,10 +21,28 @@ const userSchema = new mongoose.Schema({
 
   landSize: { type: Number },
   landType: { type: String },
+  currentCrop:{type:String},
   crops: [{ type: String }],
   farmingExperience: { type: Number },
   waterSource: { type: String },
   soilType: { type: String },
+  plantingDate:{type:Date},
+
+  irrigationMethod:{type:String ,enum:["Drip","Sprinkler","Surface","Subsurface","Manual"]},
+  fertilizerPreference:{type:String ,enum:["Organic","Chemical","Mixed"]},
+  pesticideUsage:{type:String ,enum:["Low","Medium","High","Organic"]},
+  mechanizationLevel:{type:String ,enum:["Manual","Semi","Fully"]},
+
+
+  primaryGoal:{type:String ,enum:["Maximize Yield","Sustainability","Cost Efficiency","Quality Improvement"]},
+  budgetLevel:{type:String ,enum:["Low","Medium","High"]},
+  marketAccess:{type:String ,enum:["Local","Regional","National","International"]},
+
+  pastDiseases: [{ type: String }],
+  yieldHistory: [{ year: Number, yield: Number }],
+
+  
+
 
   preferredLanguage: { type: String, default: "English" },
   notifications: { type: Boolean, default: true },

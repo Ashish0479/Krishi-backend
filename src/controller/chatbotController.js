@@ -3,7 +3,7 @@ const fs = require("fs");
 
 async function chatWithKrishiSakhi(req, res) {
   try {
-    const { message, userId } = req.body;
+    const { message, userId ,weatherInfo, profile, city} = req.body;
     let imagePath = null;
 
     // Agar file upload ho (Multer use karke req.file me aayegi)
@@ -11,7 +11,8 @@ async function chatWithKrishiSakhi(req, res) {
       imagePath = req.file.path; // upload hone ke baad file ka path
     }
 
-    const reply = await generateAIResponse(message, imagePath);
+    const reply = await generateAIResponse(message, imagePath, weatherInfo, profile, city);
+    
 
     res.status(200).json({
       success: true,
