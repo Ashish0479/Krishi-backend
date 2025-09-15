@@ -1,91 +1,84 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const fs = require("fs");
-const bakch = require("./test.json");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+
+let farmerProfileCache = null;
+
+
+let conversationHistory = [];
 
 async function generateAIResponse(farmerMessage, imagePath = null, weatherInfo, profile, city) {
   if ((!farmerMessage || farmerMessage.trim() === "") && !imagePath) {
     throw { reason: "Message or image is required", statusCode: 400 };
   }
-const farmerProfile = {
-  name: profile?.name,
-  email: profile?.email,
-  contactNumber: profile?.contactNumber,
 
-  gender: profile?.gender,
-  dateOfBirth: profile?.dateOfBirth,
 
-  state: profile?.state,
-  district: profile?.district,
-  village: profile?.village,
-  pincode: profile?.pincode,
-  coordinates: profile?.coordinates,
+  if (profile) {
+    farmerProfileCache = { ...profile };
+  }
 
-  landSize: profile?.landSize,
-  landType: profile?.landType,
-  currentCrop: profile?.currentCrop,
-  crops: profile?.crops,
-  farmingExperience: profile?.farmingExperience,
-  waterSource: profile?.waterSource,
-  soilType: profile?.soilType,
-  plantingDate: profile?.plantingDate,
+  const location = city || farmerProfileCache?.district || farmerProfileCache?.state || farmerProfileCache?.village;
+  const weatherInfomain = weatherInfo
+    ? `Current weather: ${weatherInfo?.temp}°C, ${weatherInfo?.condition}, ${weatherInfo?.description}.`
+    : "";
 
-  irrigationMethod: profile?.irrigationMethod,
-  fertilizerPreference: profile?.fertilizerPreference,
-  pesticideUsage: profile?.pesticideUsage,
-  mechanizationLevel: profile?.mechanizationLevel,
-
-  primaryGoal: profile?.primaryGoal,
-  budgetLevel: profile?.budgetLevel,
-  marketAccess: profile?.marketAccess,
-
-  pastDiseases: profile?.pastDiseases,
-  yieldHistory: profile?.yieldHistory,
-
-  preferredLanguage: profile?.preferredLanguage,
-  notifications: profile?.notifications,
-  premiumUser: profile?.premiumUser,
-};
-  const location=city||farmerProfile?.district||farmerProfile?.state||farmerProfile?.village;
-  const weatherInfomain={temperature:weatherInfo?.temp,condition:weatherInfo?.condition,description:weatherInfo?.description};
-console.log("Farmer Message in Service:", farmerMessage);
-console.log("Profile in Service:", farmerProfile);
-console.log("Weather Info in Service:", weatherInfomain);
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+
+    const historyText = conversationHistory
+      .map((entry) => `${entry.role}: ${entry.text}`)
+      .join("\n");
 
     let inputParts = [
       {
-        text: `You are a helpful agricultural assistant. Respond to the following message from a farmer:\n\n${farmerMessage}
-        Your goal is to provide clear, practical, and localized agricultural guidance that helps 
-farmers make better decisions in real time. current location of land is: ${location}. ${weatherInfomain ? ` The current weather conditions are: ${JSON.stringify(weatherInfomain)}.` : ""}${farmerProfile ? ` The farmer's profile is: ${JSON.stringify(farmerProfile)}.` : ""}
+        text: `You are a friendly agricultural assistant. Farmer profile: ${JSON.stringify(farmerProfileCache)}.
+Always give short, clear, and practical advice (like a human conversation, not a formal letter).  
+The farmer’s name is ${farmerProfileCache?.name || "Farmer"}.  
+The farm location is ${location || "unknown"}.  
+${weatherInfomain}
 
-### Language Instructions
-- Detect the language of the farmer's message.
-- If farmer writes in **Malayalam**, reply fully in **Malayalam**.  
-- If farmer writes in **English**, reply in **English**.  
-- If farmer mixes, reply in the **same style (Malayalam + English)**.  
+### Response Rules
+- Reply naturally, like you are talking directly.  
+- Do NOT write "Dear" or "Sincerely".  
+- Do NOT repeat the farmer's profile info. It's just background knowledge.  
+- If you know the crop from profile, use it to make advice better.  
+- If farmer asks in Malayalam, reply in Malayalam.  
+- If farmer asks in English, reply in English.  
+- If mix, reply in the same style.  
 
+### Conversation so far:
+${historyText}
+
+Farmer’s new message: "${farmerMessage}"
 `,
       },
     ];
 
- 
     if (imagePath) {
       const imageBase64 = fs.readFileSync(imagePath).toString("base64");
       inputParts.push({
         inlineData: {
-          mimeType: "image/jpeg", 
+          mimeType: "image/jpeg",
           data: imageBase64,
         },
       });
     }
 
-
     const result = await model.generateContent(inputParts);
+    const aiResponse = result.response.text();
 
-    return result.response.text();
+ 
+    conversationHistory.push({ role: "Farmer", text: farmerMessage });
+    conversationHistory.push({ role: "AI", text: aiResponse });
+
+    if (conversationHistory.length > 12) {
+      conversationHistory = conversationHistory.slice(-12);
+    }
+
+    return aiResponse;
   } catch (error) {
     console.error("Gemini API Error:", error.message);
     throw { reason: "Failed to get response from Gemini API", statusCode: 500 };
