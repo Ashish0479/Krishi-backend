@@ -52,9 +52,8 @@ const userSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-// Pre-save middleware for hashing password
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next(); // dobara hash na ho
+  if (!this.isModified("password")) return next(); 
   try {
     const hashedPassword = await bcrypt.hash(this.password, 10);
     this.password = hashedPassword;

@@ -6,9 +6,9 @@ async function chatWithKrishiSakhi(req, res) {
     const { message, userId ,weatherInfo, profile, city} = req.body;
     let imagePath = null;
 
-    // Agar file upload ho (Multer use karke req.file me aayegi)
+   
     if (req.file) {
-      imagePath = req.file.path; // upload hone ke baad file ka path
+      imagePath = req.file.path; 
     }
 
     const reply = await generateAIResponse(message, imagePath, weatherInfo, profile, city);

@@ -3,7 +3,6 @@ const { fetchWeatherByCity, fetchWeatherByCoords } = require("../controller/weat
 
 const router = express.Router();
 
-router.get("/", fetchWeatherByCity);       // /api/weather?city=Delhi
-router.get("/coords", fetchWeatherByCoords); // /api/weather/coords?lat=28.6&lon=77.2
-
+router.get("/", fetchWeatherByCity);      
+router.get("/coords", fetchWeatherByCoords); 
 module.exports = router;

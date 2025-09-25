@@ -7,6 +7,7 @@ const weatherRouter = require('./routes/weatherRouter')
 const chatRouter = require('./routes/chatbotRouter')
 const cropRouter = require('./routes/cropHealthRouter')
 const profileRouter = require('./routes/profileRouter')
+const router=require('./routes/communityRouter')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const PORT = serverConfig.PORT || 5000  
@@ -39,12 +40,19 @@ app.use(
   })
 );
 
+const path = require('path');
+
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
 app.use('/users',userRouter)
 app.use('/auth',authRouter)
 app.use('/weather',weatherRouter)
 app.use('/chat',chatRouter);
 app.use('/crop',cropRouter);
-app.use('/profile',profileRouter)
+app.use('/profile',profileRouter);
+app.use('/community',router);
 
 app.get('/hii',(req,res)=>{
     return res.json({message:'hello'})
